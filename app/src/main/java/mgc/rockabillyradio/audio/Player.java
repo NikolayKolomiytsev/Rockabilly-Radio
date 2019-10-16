@@ -4,15 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -32,7 +28,6 @@ public class Player {
     {
         if(exoPlayer!=null)
         {
-            Toast.makeText(context, "!=null", Toast.LENGTH_SHORT).show();
             exoPlayer.stop();
         }
         Uri URI = Uri.parse(URL);
