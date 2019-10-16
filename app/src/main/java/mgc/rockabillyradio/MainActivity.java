@@ -2,29 +2,32 @@ package mgc.rockabillyradio;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.text.DecimalFormat;
-import java.util.Random;
 
 import io.github.nikhilbhutani.analyzer.DataAnalyzer;
 import mgc.rockabillyradio.audio.Player;
@@ -57,14 +60,16 @@ public class MainActivity extends AppCompatActivity {
     public static boolean controlIsActivated = false;
     public static DataAnalyzer dataAnalyzer;
     public static ApplicationInfo app;
+    private final String PREFERENCE_FILE_KEY = "Preference";
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         activity = this;
-
+        sharedPref = getSharedPreferences(
+                PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
         try {
             app = this.getPackageManager().getApplicationInfo("mgc.rockabillyradio", 0);
         } catch (PackageManager.NameNotFoundException e) {
@@ -75,24 +80,28 @@ public class MainActivity extends AppCompatActivity {
         initialise();
         setCustomFont();
         startListenVolume();
-     //   new GetTrackInfo().execute();
+        new GetTrackInfo().execute();
         startRefreshing();
         startCounting();
+
+        if (sharedPref.getBoolean("Show", true)) {
+            showHelloWorldDialog();
+        }
     }
 
     // Initialise all views, animations and set click listeners
     void initialise() {
-        background = (ImageView) findViewById(R.id.bckg);
-        title_tv = (TextView) findViewById(R.id.title_tv);
-        track_tv = (TextView) findViewById(R.id.track_tv);
-        artist_tv = (TextView) findViewById(R.id.artist_tv);
-        volumeChanger = (CircularSeekBar) findViewById(R.id.circularSeekBar1);
-        playing_animation = (AVLoadingIndicatorView) findViewById(R.id.playing_anim);
+        background = findViewById(R.id.bckg);
+        title_tv = findViewById(R.id.title_tv);
+        track_tv = findViewById(R.id.track_tv);
+        artist_tv = findViewById(R.id.artist_tv);
+        volumeChanger = findViewById(R.id.circularSeekBar1);
+        playing_animation = findViewById(R.id.playing_anim);
         playing_animation.setVisibility(View.GONE);
-        loading_animation = (AVLoadingIndicatorView) findViewById(R.id.load_animation);
-        control_button = (ImageButton) findViewById(R.id.control_button);
+        loading_animation = findViewById(R.id.load_animation);
+        control_button = findViewById(R.id.control_button);
         control_button.setOnClickListener(controlButtonListener);
-        data_tv = (TextView) findViewById(R.id.data_tv);
+        data_tv = findViewById(R.id.data_tv);
         data_tv.setVisibility(View.VISIBLE);
     }
 
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Function for listen and change volume from seek bar to player
     void startListenVolume() {
+        Player.setVolume((100 - volumeChanger.getProgress()) / 100f);
         volumeChanger.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
@@ -168,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
                         runOnUiThread(() -> {
                             if(dataAnalyzer!=null) {
                                 MainActivity.data_tv.setText(convertToStringRepresentation(Long.valueOf(MainActivity.dataAnalyzer.getReceivedData(MainActivity.app))));
@@ -240,5 +250,28 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void enter(View view) {
 
+    }
+
+    void showHelloWorldDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.hello_dialog, null);
+
+        TextView text = layout.findViewById(R.id.text);
+        text.setMovementMethod(LinkMovementMethod.getInstance());
+        text.setText(Html.fromHtml("Hello, my name is Nikolay Kolomiytsev i'm Android Developer from 2013, subscribe in my Instagram for pay respect, Peace! ☮"));
+        builder.setPositiveButton("SUBSCRIBE", (dialog, which) -> {
+            Intent browserIntent = new
+                    Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/kolyas.mgs"));
+            startActivity(browserIntent);
+        });
+        builder.setNegativeButton("Don't Show", (dialog, which) -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("Show", false);
+            editor.commit();
+        });
+        text.setTextColor(Color.BLACK);
+        builder.setView(layout);
+        AlertDialog alert = builder.show();
     }
 }
