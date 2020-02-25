@@ -13,3 +13,4 @@ Notification Service with custom view
 Audio Stream with radio
 Parsing an HTML text for knowing song title
 C++ ExoPlayer
+Animations
