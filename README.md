@@ -8,7 +8,8 @@ Tutorial you can found [here](https://tproger.ru/articles/android-online-radio/)
 
 Technology:
 
-Custom view
+Custom view of Sound Changer
+Notification Service with custom view
 Audio Stream with radio
 Parsing an HTML text for knowing song title
 C++ ExoPlayer
