@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     useLibrary 'org.apache.http.legacy'
@@ -11,11 +13,11 @@ android {
 
     compileSdkVersion 28
     defaultConfig {
-        applicationId "mgc.rockabillyradio"
+        applicationId "nk.rockabillyradio"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.1"
+        versionCode 1
+        versionName "1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,6 +32,7 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -45,5 +48,6 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:2.51'
     implementation 'com.github.NikhilBhutani:EasyDataAnalyzer:1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mgc.rockabillyradio.MainActivity">
+    tools:context="nk.rockabillyradio.activity.MainActivity">
 
 
     <ImageView
@@ -37,19 +37,6 @@
                 android:textColor="@color/titleColor"
                 android:textSize="@dimen/title_size" />
 
-            <TextView
-                android:id="@+id/data_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.0 KB"
-                android:onClick="enter"
-                android:textColor="@color/titleColor"
-                android:textSize="@dimen/data_size"
-                android:layout_marginRight="10dp"
-                android:fontFamily="sans-serif-condensed"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -103,7 +90,7 @@
                     android:translationZ="2dp"
                     android:visibility="visible" />
 
-                <mgc.rockabillyradio.CircularSeekBar
+                <nk.rockabillyradio.views.CircularSeekBar
                     android:id="@+id/circularSeekBar1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
